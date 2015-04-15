@@ -7,7 +7,7 @@ http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 http://www.springframework.org/schema/context 
 http://www.springframework.org/schema/context/spring-context-4.0.xsd">
  
-	<context:component-scan base-package="austinmckinley.pitboss.status" />
+	<context:component-scan base-package="austinmckinley.pitboss" />
  
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.UrlBasedViewResolver">

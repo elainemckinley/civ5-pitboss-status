@@ -14,4 +14,10 @@ public class StatusController {
 		model.addAttribute("test", "Hello World!");
 		return "status-index";
 	}
+	
+	@RequestMapping(value="/logging-input", method = RequestMethod.POST)
+	public String updateLogData(Model model) {
+		model.addAttribute("test", "Hello World!");
+		return "status-index";
+	}
 }
