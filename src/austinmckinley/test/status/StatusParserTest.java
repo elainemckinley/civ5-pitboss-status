@@ -16,7 +16,8 @@ public class StatusParserTest {
 
 	@Test
 	public void testGenerateInitialStatusRecord() throws Exception {
-		String logInput = "[3901872.406] Net SEND (8): size=36: NetAICivsProcessed, 8, Game Turn 69, 0/1\n"
+		String logInput = "[38000.562] DBG: Game Turn 68\n"
+				+ "[3901872.406] Net SEND (8): size=36: NetAICivsProcessed, 8, Game Turn 69, 0/1\n"
 				+ "[3901872.406] DBG: changeNumGameTurnActive(1) m_iNumActive=1 : setTurnActive() for player 0 Prometheus\n"
 				+ "[3901872.437] DBG: changeNumGameTurnActive(1) m_iNumActive=2 : setTurnActive() for player 1 Muzzy\n"
 				+ "[3901872.438] DBG: changeNumGameTurnActive(1) m_iNumActive=3 : setTurnActive() for player 2 Captain Crunch\n"
@@ -33,8 +34,10 @@ public class StatusParserTest {
 		assertThat(gateway.getCurrentStatus().getPlayerStatuses().get("0"), equalTo(new PlayerTurnStatus("Prometheus", false)));
 		assertThat(gateway.getCurrentStatus().getPlayerStatuses().get("1"), equalTo(new PlayerTurnStatus("Muzzy", true)));
 		assertThat(gateway.getCurrentStatus().getPlayerStatuses().get("2"), equalTo(new PlayerTurnStatus("Captain Crunch", false)));
-		assertEquals(gateway.getCurrentStatus().getChatMessages(), asList(new ChatMessage("1", "hello world")
-		));
+
+		assertEquals(gateway.getCurrentStatus().getChatMessages(), asList(new ChatMessage("1", "hello world")));
+
+		assertThat(gateway.getCurrentStatus().getTurnNumber(), equalTo(68));
 	}
 
 	private StatusParser createGatewayFromInputString(String logInput) {

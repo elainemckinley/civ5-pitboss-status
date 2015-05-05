@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public class StatusRecord {
+	int turnNumber;
 	Map<String, PlayerTurnStatus> playerStatuses;
 	List<ChatMessage> chatMessages;
 
@@ -17,6 +18,15 @@ public class StatusRecord {
 	public StatusRecord() {
 		this.playerStatuses = new HashMap<String, PlayerTurnStatus>();
 		this.chatMessages = new ArrayList<>();
+		this.turnNumber = -1;
+	}
+
+	public int getTurnNumber() {
+		return turnNumber;
+	}
+
+	public void setTurnNumber(int turnNumber) {
+		this.turnNumber = turnNumber;
 	}
 
 	public Map<String, PlayerTurnStatus> getPlayerStatuses() {

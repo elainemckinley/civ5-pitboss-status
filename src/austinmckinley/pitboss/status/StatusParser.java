@@ -20,6 +20,7 @@ public class StatusParser {
 	private static Pattern netTurnCompletePattern = Pattern.compile("\\[[0-9]*\\.[0-9]*\\] Net SEND \\(.*\\): .*: NetTurnComplete : Turn Complete, ([0-9]+), .*$");
 	private static Pattern netTurnUnreadyPattern = Pattern.compile("\\[[0-9]*\\.[0-9]*\\] Net RECV \\(.*\\) :NetTurnUnready : Turn Complete, ([0-9]+) .*$");
 	private static Pattern netChatPattern = Pattern.compile("\\[[0-9]*\\.[0-9]*\\] Net RECV \\(.*\\) :NetChat : Player ([0-9]+) said \"(.*)\"$");
+	private static Pattern gameTurnPattern = Pattern.compile("\\[[0-9]*\\.[0-9]*\\] DBG: Game Turn ([0-9]+)$");
 
 	@Autowired
 	public StatusParser(BufferedReader inputLogReader) {
@@ -73,6 +74,15 @@ public class StatusParser {
 			String messageText = netChatMatcher.group(2);
 
 			statusRecord.getChatMessages().add(new ChatMessage(playerId, messageText));
+			return;
+		}
+
+		Matcher gameTurnMatcher = gameTurnPattern.matcher(lineText);
+		if (gameTurnMatcher.matches()) {
+			int turnNumber = Integer.parseInt(gameTurnMatcher.group(1));
+			statusRecord.setTurnNumber(turnNumber);
+
+			return;
 		}
 	}
 
