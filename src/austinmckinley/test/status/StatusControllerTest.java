@@ -12,7 +12,6 @@ import org.mockito.InjectMocks;
 
 import austinmckinley.pitboss.status.StatusController;
 
-
 public class StatusControllerTest {
 
 	MockMvc mockMvc;
