@@ -1,20 +1,19 @@
 package austinmckinley.pitboss.status;
 
+import austinmckinley.pitboss.status.dataobjects.ChatMessage;
+import austinmckinley.pitboss.status.dataobjects.PlayerTurnStatus;
+import austinmckinley.pitboss.status.dataobjects.StatusRecord;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import austinmckinley.pitboss.status.dataobjects.ChatMessage;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import austinmckinley.pitboss.status.dataobjects.PlayerTurnStatus;
-import austinmckinley.pitboss.status.dataobjects.StatusRecord;
-
 public class StatusParser {
 	private BufferedReader inputLogReader;
 	private StatusRecord statusRecord;
+    private boolean isHealthy;
 	
 	private static Pattern setTurnActivePattern = Pattern.compile("\\[[0-9]*\\.[0-9]*\\] DBG: changeNumGameTurnActive\\([0-9]\\) m_iNumActive=[0-9]* : setTurnActive\\(\\) for player ([0-9]*) (.*)$");
 	private static Pattern netTurnCompletePattern = Pattern.compile("\\[[0-9]*\\.[0-9]*\\] Net SEND \\(.*\\): .*: NetTurnComplete : Turn Complete, ([0-9]+), .*$");
@@ -26,18 +25,16 @@ public class StatusParser {
 	public StatusParser(BufferedReader inputLogReader) {
 		this.inputLogReader = inputLogReader;
 		this.statusRecord = new StatusRecord();
+        isHealthy = true;
 	}
 	
 	public void generateInitialStatusRecord() throws IOException {
-		while(inputLogReader.ready()) {
-			String lineText = inputLogReader.readLine();
-			if(lineText == null) {
-				break;
-			}
-			
-			processSingleLine(lineText);		
-		}
+        readStatusUpdateIfExists();
 	}
+
+    public boolean isHealthy() {
+        return isHealthy;
+    }
 	
 	private void processSingleLine(String lineText) {
 		Matcher setTurnActiveMatcher = setTurnActivePattern.matcher(lineText);
@@ -86,17 +83,23 @@ public class StatusParser {
 		}
 	}
 
-	public StatusRecord checkAndUpdateCurrentStatus() {
-		if (updatesExist()) {
-		}
-		throw new NotImplementedException();
-	}
-	
 	public StatusRecord getCurrentStatus() {
-		return statusRecord;
+		readStatusUpdateIfExists();
+        return this.statusRecord;
 	}
 
-	private boolean updatesExist() {
-		return false;
-	}
+    private void readStatusUpdateIfExists() {
+        try {
+            while(inputLogReader.ready()) {
+                String lineText = inputLogReader.readLine();
+                if(lineText == null) {
+                    break;
+                }
+
+                processSingleLine(lineText);
+            }
+        } catch (IOException ex) {
+            isHealthy = false;
+        }
+    }
 }

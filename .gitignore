@@ -122,3 +122,6 @@ local.properties
 
 # TeXlipse plugin
 .texlipse
+
+# Target dir
+target/*
