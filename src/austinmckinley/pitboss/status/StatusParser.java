@@ -81,26 +81,4 @@ public class StatusParser {
 	private boolean updatesExist() {
 		return false;
 	}
-
-//	private Line parseSingleLine(String lineText) {		
-//		Line line = new Line();
-//
-//		if(!gameActionPattern.matcher(lineText).matches()) {
-//			return null;
-//		}
-//		
-//		line.lineText = lineText;
-//		
-//		line.gameAction = GameAction.getSafeValue(gameActionPattern.matcher(lineText).group(1));			
-//
-//		String timestamp = timestampPattern.matcher(lineText).matches() ? timestampPattern.matcher(lineText).group(0) : "";
-//		String netAction = netActionPattern.matcher(lineText).matches() ? netActionPattern.matcher(lineText).group(0) : "";
-//
-//		line.timestamp = timestamp;
-//		line.netAction = netAction;
-//		
-//		System.out.println(line);
-//		return line;
-//	}
-	
 }
