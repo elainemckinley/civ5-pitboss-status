@@ -19,7 +19,10 @@ public class StatusParserTest {
 		String logInput = "[3901872.406] Net SEND (8): size=36: NetAICivsProcessed, 8, Game Turn 69, 0/1\n"
 				+ "[3901872.406] DBG: changeNumGameTurnActive(1) m_iNumActive=1 : setTurnActive() for player 0 Prometheus\n"
 				+ "[3901872.437] DBG: changeNumGameTurnActive(1) m_iNumActive=2 : setTurnActive() for player 1 Muzzy\n"
-				+ "[3901753.140] Net SEND (1, 8): size=32: NetTurnComplete : Turn Complete, 1, 1/2\n"
+				+ "[3901872.438] DBG: changeNumGameTurnActive(1) m_iNumActive=3 : setTurnActive() for player 2 Captain Crunch\n"
+				+ "[3901753.140] Net SEND (1, 8): size=32: NetTurnComplete : Turn Complete, 1, 1/3\n"
+				+ "[3901753.141] Net SEND (1, 8): size=32: NetTurnComplete : Turn Complete, 2, 2/3\n"
+				+ "[3901753.142] Net RECV (2) :NetTurnUnready : Turn Complete, 2 TurnCompleteStatus: 1/3\n"
 				+ "[4005074.218] Net RECV (1) :NetChat : Player 1 said \"hello world\"\n";
 		StatusParser gateway = createGatewayFromInputString(logInput);
 
@@ -29,6 +32,7 @@ public class StatusParserTest {
 
 		assertThat(gateway.getCurrentStatus().getPlayerStatuses().get("0"), equalTo(new PlayerTurnStatus("Prometheus", false)));
 		assertThat(gateway.getCurrentStatus().getPlayerStatuses().get("1"), equalTo(new PlayerTurnStatus("Muzzy", true)));
+		assertThat(gateway.getCurrentStatus().getPlayerStatuses().get("2"), equalTo(new PlayerTurnStatus("Captain Crunch", false)));
 		assertEquals(gateway.getCurrentStatus().getChatMessages(), asList(new ChatMessage("1", "hello world")
 		));
 	}

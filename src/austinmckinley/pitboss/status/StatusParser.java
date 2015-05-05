@@ -16,8 +16,9 @@ public class StatusParser {
 	private BufferedReader inputLogReader;
 	private StatusRecord statusRecord;
 	
-	private static Pattern setTurnActivePattern = Pattern.compile("\\[[0-9]*\\.[0-9]*\\] DBG: changeNumGameTurnActive\\([0-9]\\) m_iNumActive=[0-9]* : setTurnActive\\(\\) for player ([0-9]*) (.*)");
-	private static Pattern netTurnCompletePattern = Pattern.compile("\\[[0-9]*\\.[0-9]*\\] Net SEND \\(.*\\): .*: NetTurnComplete : Turn Complete, ([0-9]+), .*");
+	private static Pattern setTurnActivePattern = Pattern.compile("\\[[0-9]*\\.[0-9]*\\] DBG: changeNumGameTurnActive\\([0-9]\\) m_iNumActive=[0-9]* : setTurnActive\\(\\) for player ([0-9]*) (.*)$");
+	private static Pattern netTurnCompletePattern = Pattern.compile("\\[[0-9]*\\.[0-9]*\\] Net SEND \\(.*\\): .*: NetTurnComplete : Turn Complete, ([0-9]+), .*$");
+	private static Pattern netTurnUnreadyPattern = Pattern.compile("\\[[0-9]*\\.[0-9]*\\] Net RECV \\(.*\\) :NetTurnUnready : Turn Complete, ([0-9]+) .*$");
 	private static Pattern netChatPattern = Pattern.compile("\\[[0-9]*\\.[0-9]*\\] Net RECV \\(.*\\) :NetChat : Player ([0-9]+) said \"(.*)\"$");
 
 	@Autowired
@@ -47,7 +48,6 @@ public class StatusParser {
 			PlayerTurnStatus playerStatus = new PlayerTurnStatus(playerName, false);
 			statusRecord.getPlayerStatuses().put(playerId, playerStatus);
 			
-			System.out.println("***" + playerName + "***");
 			return;
 		}
 
@@ -56,6 +56,14 @@ public class StatusParser {
 			String playerId = netTurnCompleteMatcher.group(1);
 
 			statusRecord.getPlayerStatuses().get(playerId).setTurnFinished(true);
+			return;
+		}
+
+		Matcher netTurnUnreadyMatcher = netTurnUnreadyPattern.matcher(lineText);
+		if (netTurnUnreadyMatcher.matches()) {
+			String playerId = netTurnUnreadyMatcher.group(1);
+
+			statusRecord.getPlayerStatuses().get(playerId).setTurnFinished(false);
 			return;
 		}
 
