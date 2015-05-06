@@ -16,7 +16,10 @@ public class StatusParserTest {
 
 	@Test
 	public void testGenerateInitialStatusRecord() throws Exception {
-		String logInput = "[38000.562] DBG: Game Turn 68\n"
+		String logInput = "[1599410.235] DBG: UpdateMoves() : player.setEndTurn(true) called for player 0 Prometheus\n"
+                + "[1599410.235] DBG: UpdateMoves() : player.setEndTurn(true) called for player 1 Muzzy\n"
+                + "[1599410.235] DBG: UpdateMoves() : player.setEndTurn(true) called for player 2 Captain Crunch\n"
+                + "[38000.562] DBG: Game Turn 68\n"
 				+ "[3901872.406] Net SEND (8): size=36: NetAICivsProcessed, 8, Game Turn 69, 0/1\n"
 				+ "[3901872.406] DBG: changeNumGameTurnActive(1) m_iNumActive=1 : setTurnActive() for player 0 Prometheus\n"
 				+ "[3901872.437] DBG: changeNumGameTurnActive(1) m_iNumActive=2 : setTurnActive() for player 1 Muzzy\n"

@@ -20,6 +20,7 @@ public class StatusParser {
 	private static Pattern netTurnUnreadyPattern = Pattern.compile("\\[[0-9]*\\.[0-9]*\\] Net RECV \\(.*\\) :NetTurnUnready : Turn Complete, ([0-9]+) .*$");
 	private static Pattern netChatPattern = Pattern.compile("\\[[0-9]*\\.[0-9]*\\] Net RECV \\(.*\\) :NetChat : Player ([0-9]+) said \"(.*)\"$");
 	private static Pattern gameTurnPattern = Pattern.compile("\\[[0-9]*\\.[0-9]*\\] DBG: Game Turn ([0-9]+)$");
+	private static Pattern newPlayerPattern = Pattern.compile("\\[[0-9]*\\.[0-9]*\\] DBG: UpdateMoves\\(\\) : player.setEndTurn\\(true\\) called for player ([0-9]+) (.*)$");
 
 	@Autowired
 	public StatusParser(BufferedReader inputLogReader) {
@@ -37,51 +38,64 @@ public class StatusParser {
     }
 	
 	private void processSingleLine(String lineText) {
-		Matcher setTurnActiveMatcher = setTurnActivePattern.matcher(lineText);
-		if (setTurnActiveMatcher.matches()) {
+        System.out.println("Parsing line: " + lineText);
 
-			String playerId = setTurnActiveMatcher.group(1);
-			String playerName = setTurnActiveMatcher.group(2);
+        Matcher netChatMatcher = netChatPattern.matcher(lineText);
+        if (netChatMatcher.matches()) {
+            String playerId = netChatMatcher.group(1);
+            String messageText = netChatMatcher.group(2);
 
-			PlayerTurnStatus playerStatus = new PlayerTurnStatus(playerName, false);
-			statusRecord.getPlayerStatuses().put(playerId, playerStatus);
-			
-			return;
-		}
+            statusRecord.getChatMessages().add(new ChatMessage(playerId, messageText));
+            return;
+        }
 
-		Matcher netTurnCompleteMatcher = netTurnCompletePattern.matcher(lineText);
-		if (netTurnCompleteMatcher.matches()) {
-			String playerId = netTurnCompleteMatcher.group(1);
+        Matcher newPlayerMatcher = newPlayerPattern.matcher(lineText);
+        if (newPlayerMatcher.matches()) {
+            String playerId = newPlayerMatcher.group(1);
+            String playerName = newPlayerMatcher.group(2);
 
-			statusRecord.getPlayerStatuses().get(playerId).setTurnFinished(true);
-			return;
-		}
+            statusRecord.getPlayerStatuses().put(playerId, new PlayerTurnStatus(playerName, false));
+            return;
+        }
 
-		Matcher netTurnUnreadyMatcher = netTurnUnreadyPattern.matcher(lineText);
-		if (netTurnUnreadyMatcher.matches()) {
-			String playerId = netTurnUnreadyMatcher.group(1);
+        Matcher setTurnActiveMatcher = setTurnActivePattern.matcher(lineText);
+        if (setTurnActiveMatcher.matches()) {
+            String playerId = setTurnActiveMatcher.group(1);
 
-			statusRecord.getPlayerStatuses().get(playerId).setTurnFinished(false);
-			return;
-		}
+            if (statusRecord.getPlayerStatuses().containsKey(playerId)) {
+                statusRecord.getPlayerStatuses().get(playerId).setTurnFinished(false);
+            }
+            return;
+        }
 
-		Matcher netChatMatcher = netChatPattern.matcher(lineText);
-		if (netChatMatcher.matches()) {
-			String playerId = netChatMatcher.group(1);
-			String messageText = netChatMatcher.group(2);
+        Matcher netTurnCompleteMatcher = netTurnCompletePattern.matcher(lineText);
+        if (netTurnCompleteMatcher.matches()) {
+            String playerId = netTurnCompleteMatcher.group(1);
 
-			statusRecord.getChatMessages().add(new ChatMessage(playerId, messageText));
-			return;
-		}
+            if (statusRecord.getPlayerStatuses().containsKey(playerId)) {
+                statusRecord.getPlayerStatuses().get(playerId).setTurnFinished(true);
+            }
+            return;
+        }
 
-		Matcher gameTurnMatcher = gameTurnPattern.matcher(lineText);
-		if (gameTurnMatcher.matches()) {
-			int turnNumber = Integer.parseInt(gameTurnMatcher.group(1));
-			statusRecord.setTurnNumber(turnNumber);
+        Matcher netTurnUnreadyMatcher = netTurnUnreadyPattern.matcher(lineText);
+        if (netTurnUnreadyMatcher.matches()) {
+            String playerId = netTurnUnreadyMatcher.group(1);
 
-			return;
-		}
-	}
+            if (statusRecord.getPlayerStatuses().containsKey(playerId)) {
+                statusRecord.getPlayerStatuses().get(playerId).setTurnFinished(false);
+            }
+            return;
+        }
+
+        Matcher gameTurnMatcher = gameTurnPattern.matcher(lineText);
+        if (gameTurnMatcher.matches()) {
+            int turnNumber = Integer.parseInt(gameTurnMatcher.group(1));
+            statusRecord.setTurnNumber(turnNumber);
+
+            return;
+        }
+    }
 
 	public StatusRecord getCurrentStatus() {
 		readStatusUpdateIfExists();

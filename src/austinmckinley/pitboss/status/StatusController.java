@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/status")
 public class StatusController {
 
-    @Autowired StatusParser parser;
+    @Autowired StatusParser statusParser;
 
 	@RequestMapping(value="/test", method = RequestMethod.GET)
 	public String getIndex(Model model) {
-		model.addAttribute("statusRecord", parser.getCurrentStatus().toString());
+		model.addAttribute("statusRecord", statusParser.getCurrentStatus().toString());
 		return "status-index";
 	}
 }

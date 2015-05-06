@@ -19,8 +19,7 @@ public class LogProcessor {
 	
 	public StatusRecord retrieveUpdatedStatusRecord() {
 		checkAndProcessUpdates();
-		
-		
+
 		return statusRecord;
 	}
 	
