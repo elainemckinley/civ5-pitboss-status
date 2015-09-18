@@ -16,7 +16,7 @@ public class StatusParser {
     private boolean isHealthy;
 	
 	private static Pattern setTurnActivePattern = Pattern.compile("\\[[0-9]*\\.[0-9]*\\] DBG: changeNumGameTurnActive\\([0-9]\\) m_iNumActive=[0-9]* : setTurnActive\\(\\) for player ([0-9]*) (.*)$");
-	private static Pattern netTurnCompletePattern = Pattern.compile("\\[[0-9]*\\.[0-9]*\\] Net SEND \\(.*\\): .*: NetTurnComplete : Turn Complete, ([0-9]+), .*$");
+	private static Pattern netTurnCompletePattern = Pattern.compile("\\[[0-9]*\\.[0-9]*\\] Net RECV \\(.*\\) :NetTurnComplete : Turn Complete, ([0-9]+), .*$");
 	private static Pattern netTurnUnreadyPattern = Pattern.compile("\\[[0-9]*\\.[0-9]*\\] Net RECV \\(.*\\) :NetTurnUnready : Turn Complete, ([0-9]+) .*$");
 	private static Pattern netChatPattern = Pattern.compile("\\[[0-9]*\\.[0-9]*\\] Net RECV \\(.*\\) :NetChat : Player ([0-9]+) said \"(.*)\"$");
 	private static Pattern gameTurnPattern = Pattern.compile("\\[[0-9]*\\.[0-9]*\\] DBG: Game Turn ([0-9]+)$");

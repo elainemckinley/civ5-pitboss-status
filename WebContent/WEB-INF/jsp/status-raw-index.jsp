@@ -25,11 +25,7 @@
                     </td>
                 </tr>
             </c:forEach>
-            <c:forEach items="${chatMessages}" var="chatMessage">
-                {chatMessage.getName()}
-            </c:forEach>
-
-        </table> 
+        </table>
 	</div>
 </body>
 </html>

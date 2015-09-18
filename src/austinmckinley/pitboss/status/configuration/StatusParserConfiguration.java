@@ -4,6 +4,7 @@ import austinmckinley.pitboss.status.StatusParser;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.Resource;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -11,10 +12,12 @@ import java.io.FileReader;
 @Configuration
 public class StatusParserConfiguration {
 
+    @Resource(mappedName = "logFileLocation")
+    private String logFileLocation;
+
     @Bean
     StatusParser statusParser() {
         StatusParser parser = null;
-        String logFileLocation = "/Users/Yourlogfile.txt";
 
         try {
             parser = new StatusParser(new BufferedReader(new FileReader(logFileLocation)));
@@ -30,6 +33,7 @@ public class StatusParserConfiguration {
             System.out.println(ex.getClass());
             System.out.println("*********************************************************");
         }
+
         return parser;
     }
 }

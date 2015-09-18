@@ -24,8 +24,8 @@ public class StatusParserTest {
 				+ "[3901872.406] DBG: changeNumGameTurnActive(1) m_iNumActive=1 : setTurnActive() for player 0 Prometheus\n"
 				+ "[3901872.437] DBG: changeNumGameTurnActive(1) m_iNumActive=2 : setTurnActive() for player 1 Muzzy\n"
 				+ "[3901872.438] DBG: changeNumGameTurnActive(1) m_iNumActive=3 : setTurnActive() for player 2 Captain Crunch\n"
-				+ "[3901753.140] Net SEND (1, 8): size=32: NetTurnComplete : Turn Complete, 1, 1/3\n"
-				+ "[3901753.141] Net SEND (1, 8): size=32: NetTurnComplete : Turn Complete, 2, 2/3\n"
+				+ "[3901753.140] Net RECV (1, 8) :NetTurnComplete : Turn Complete, 1, 1/3\n"
+				+ "[3901753.141] Net RECV (1, 8) :NetTurnComplete : Turn Complete, 2, 2/3\n"
 				+ "[3901753.142] Net RECV (2) :NetTurnUnready : Turn Complete, 2 TurnCompleteStatus: 1/3\n"
 				+ "[4005074.218] Net RECV (1) :NetChat : Player 1 said \"hello world\"\n";
 		StatusParser gateway = createGatewayFromInputString(logInput);
